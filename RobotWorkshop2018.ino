@@ -36,17 +36,34 @@ void setup(){
 
 void loop(){
   int distance = measureDistance();
+  delay(100);
+  
   while(distance >= THRESHOLD) {
     forward();
-    delay(200);
-    distance = measureDistance();
+    int dist0 = measureDistance();
+    delay(100);
+    turnServo(60);
+    delay(100);
+    int dist1 = measureDistance();
+    delay(100);
+    turnServo(120);
+    delay(100);
+    int dist2 = measureDistance();
+    delay(100);
+    turnServo(90);
+    delay(100);
+    distance = min(dist0, dist1);
+    distance = min(distance, dist2);
   }
+  stopMovement();
+  
   turnServo(0);
-  delay(100);
+  delay(300);
   int rightDistance = measureDistance();
   turnServo(180);
-  delay(100);
+  delay(600);
   int leftDistance = measureDistance();
+  turnServo(90);
   if(leftDistance > rightDistance)
     turnLeft();
   else
@@ -83,6 +100,13 @@ void turnLeft(){
 void turnRight(){
   rightMotorBackward();
   leftMotorForward();
+}
+
+void stopMovement(){
+  digitalWrite(MOTOR1_PIN1, LOW);
+  digitalWrite(MOTOR1_PIN2, LOW);
+  digitalWrite(MOTOR2_PIN1, LOW);
+  digitalWrite(MOTOR2_PIN2, LOW);
 }
 
 void rightMotorForward(){
